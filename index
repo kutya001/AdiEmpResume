@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Резюме - Адилет Тураров | Reporting Developer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--color-primary)',
+                        secondary: 'var(--color-secondary)',
+                        accent: 'var(--color-accent)',
+                        background: 'var(--color-bg)',
+                        surface: 'var(--color-surface)',
+                        text: 'var(--color-text)',
+                        muted: 'var(--color-muted)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-in': 'slideIn 0.5s ease-out forwards',
+                        'flow': 'flowDash 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        flowDash: {
+                            '0%': { strokeDashoffset: '1000' },
+                            '100%': { strokeDashoffset: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- THEMES CONFIGURATION --- */
+        :root {
+            /* Default is DARK (Matrix/Tech) */
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-primary: #f8fafc;
+            --color-secondary: #cbd5e1;
+            --color-accent: #38bdf8;
+            --color-text: #e2e8f0;
+            --color-muted: #64748b;
+            --grid-color: rgba(255, 255, 255, 0.05);
+            --line-color: #334155;
+        }
+
+        [data-theme="light"] {
+            --color-bg: #f8fafc;
+            --color-surface: #ffffff;
+            --color-primary: #0f172a;
+            --color-secondary: #475569;
+            --color-accent: #2563eb;
+            --color-text: #1e293b;
+            --color-muted: #94a3b8;
+            --grid-color: rgba(15, 23, 42, 0.05);
+            --line-color: #cbd5e1;
+        }
+
+        [data-theme="warm"] {
+            --color-bg: #fdfbf7;
+            --color-surface: #fffefb;
+            --color-primary: #422006;
+            --color-secondary: #78350f;
+            --color-accent: #d97706;
+            --color-text: #292524;
+            --color-muted: #a8a29e;
+            --grid-color: rgba(66, 32, 6, 0.05);
+            --line-color: #e7e5e4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            transition: background-color 0.5s, color 0.5s;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: var(--color-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--grid-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .bpmn-path {
+            stroke: var(--line-color);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 10;
+            animation: flowDash 30s linear infinite;
+        }
+
+        /* Animation Classes */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-percent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--color-primary);
+        }
+
+        .active-nav {
+            border-color: var(--color-accent) !important;
+            color: var(--color-accent) !important;
+            background-color: var(--color-surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile Active Nav State */
+        .active-mobile-nav {
+            background-color: var(--color-accent) !important;
+            color: white !important;
+            border-color: var(--color-accent) !important;
+        }
+        
+        /* Contact Dropdown Logic */
+        .contact-dropdown {
+            transform-origin: top right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .contact-dropdown.active {
+            transform: scale(1);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .theme-btn.active {
+            font-weight: 700;
+            color: var(--color-primary);
+            border-color: var(--color-accent);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav-slider {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .mobile-nav-slider::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        #image-modal {
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .bpmn-task {
+            border-radius: 12px;
+            border: 2px solid var(--color-text);
+        }
+
+        .job-hidden {
+            display: none !important;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--color-muted); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-grid-pattern antialiased">
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-4" onclick="closeModal()">
+        <button class="absolute top-4 right-4 text-white text-4xl hover:text-accent">&times;</button>
+        <img id="modal-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-card transition-all duration-300 shadow-sm border-b border-gray-100/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between h-auto md:h-20 py-2 md:py-0">
+                
+                <!-- Header / Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                        <div class="w-10 h-10 rounded-lg border-2 border-accent rotate-45 flex items-center justify-center bg-surface shadow-sm">
+                             <div class="w-6 h-6 bg-accent/20 -rotate-45 rounded-full flex items-center justify-center">
+                                 <span class="w-2 h-2 bg-accent rounded-full"></span>
+                             </div>
+                        </div>
+                        <span class="font-bold text-xl text-primary tracking-tight font-mono">
+                            Adilet Turarov
+                        </span>
+                    </div>
+                    
+                    <!-- Mobile Controls -->
+                    <div class="flex items-center gap-2 md:hidden relative">
+                        <button onclick="toggleThemeMobile()" class="w-9 h-9 rounded-full bg-surface text-secondary border border-gray-600 flex items-center justify-center shadow-md mr-1">
+                             <i class="fas fa-adjust text-sm"></i>
+                        </button>
+                        
+                        <div class="relative">
+                            <button onclick="toggleContacts('mobile')" class="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center shadow-md">
+                                <i class="fas fa-phone-alt text-sm"></i>
+                            </button>
+                             <!-- Mobile Dropdown -->
+                            <div id="contact-icons-mobile" class="contact-dropdown absolute top-full right-0 mt-3 w-64 bg-surface rounded-xl shadow-xl border border-gray-100 p-3 flex-col gap-2 z-50">
+                                <a href="https://wa.me/996707877113" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-green-400 transition-colors">
+                                    <i class="fab fa-whatsapp text-lg w-6 text-center"></i> WhatsApp
+                                </a>
+                                <a href="mailto:adilet.turarov13@gmail.com" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-blue-400 transition-colors">
+                                    <i class="fas fa-envelope text-lg w-6 text-center"></i> Email
+                                </a>
+                                <a href="https://www.linkedin.com/in/adilet-turarov-253a351b0" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-blue-600 transition-colors">
+                                    <i class="fab fa-linkedin text-lg w-6 text-center"></i> LinkedIn
+                                </a>
+                                <a href="https://github.com/AdiletTurarov" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-gray-400 transition-colors">
+                                    <i class="fab fa-github text-lg w-6 text-center"></i> GitHub
+                                </a>
+                                <a href="tel:+996707877113" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-white transition-colors">
+                                    <i class="fas fa-phone-alt text-lg w-6 text-center"></i> 996 707 877 113
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center justify-center flex-1 mx-8 relative">
+                    <div class="absolute w-full h-0.5 bg-gray-200/20 z-0 top-1/2 transform -translate-y-1/2"></div>
+                    <div class="flex items-center gap-8 z-10 bg-transparent">
+                         <a href="#about" onclick="window.scrollTo(0,0); return false;" class="nav-link-desktop bg-surface px-4 py-1.5 rounded-lg border border-gray-600 text-sm font-bold text-secondary hover:border-accent hover:text-accent hover:shadow-md transition-all uppercase tracking-wide">Обо мне</a>
+                         <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                         <a href="#experience" class="nav-link-desktop bg-surface px-4 py-1.5 rounded-lg border border-gray-600 text-sm font-bold text-secondary hover:border-accent hover:text-accent hover:shadow-md transition-all uppercase tracking-wide">Опыт</a>
+                         <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                         <a href="#skills" class="nav-link-desktop bg-surface px-4 py-1.5 rounded-lg border border-gray-600 text-sm font-bold text-secondary hover:border-accent hover:text-accent hover:shadow-md transition-all uppercase tracking-wide">Навыки</a>
+                         <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                         <a href="#education" class="nav-link-desktop bg-surface px-4 py-1.5 rounded-lg border border-gray-600 text-sm font-bold text-secondary hover:border-accent hover:text-accent hover:shadow-md transition-all uppercase tracking-wide">Образование</a>
+                    </div>
+                </div>
+
+                <!-- Desktop Right Controls -->
+                <div class="hidden md:flex items-center gap-6">
+                    <div class="flex items-center gap-4 bg-gray-800/50 px-3 py-1.5 rounded-full border border-gray-700">
+                        <button onclick="setTheme('light')" class="theme-btn flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-theme-val="light">
+                            <div class="w-3 h-3 rounded-full bg-white border border-gray-300"></div> Белый
+                        </button>
+                        <button onclick="setTheme('dark')" class="theme-btn flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-theme-val="dark">
+                            <div class="w-3 h-3 rounded-full bg-slate-900 border border-slate-500"></div> Тёмный
+                        </button>
+                        <button onclick="setTheme('warm')" class="theme-btn flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-theme-val="warm">
+                            <div class="w-3 h-3 rounded-full bg-[#fdfbf7] border border-orange-200"></div> Тёплый
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <button onclick="toggleContacts('desktop')" class="bg-accent hover:bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold shadow-md transition-all flex items-center gap-2">
+                            <i class="fas fa-paper-plane"></i> Связаться
+                        </button>
+                        <div id="contact-icons" class="contact-dropdown absolute top-full right-0 mt-3 w-64 bg-surface rounded-xl shadow-xl border border-gray-600 p-3 flex-col gap-2 z-50">
+                             <a href="https://wa.me/996707877113" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-green-400 transition-colors">
+                                <i class="fab fa-whatsapp text-lg w-6 text-center"></i> WhatsApp
+                            </a>
+                            <a href="mailto:adilet.turarov13@gmail.com" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-blue-400 transition-colors">
+                                <i class="fas fa-envelope text-lg w-6 text-center"></i> Email
+                            </a>
+                            <a href="https://www.linkedin.com/in/adilet-turarov-253a351b0" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-blue-600 transition-colors">
+                                <i class="fab fa-linkedin text-lg w-6 text-center"></i> LinkedIn
+                            </a>
+                             <a href="https://github.com/AdiletTurarov" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-gray-400 transition-colors">
+                                <i class="fab fa-github text-lg w-6 text-center"></i> GitHub
+                            </a>
+                            <a href="tel:+996707877113" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-secondary hover:text-white transition-colors">
+                                <i class="fas fa-phone-alt text-lg w-6 text-center"></i> 996 707 877 113
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Nav Slider -->
+                <div class="md:hidden w-full overflow-x-auto mobile-nav-slider pb-2 mt-2">
+                    <div class="flex items-center gap-4 px-1 min-w-max">
+                        <a href="#about" onclick="window.scrollTo(0,0); return false;" class="nav-link-mobile px-3 py-1 rounded-md border border-gray-600 text-xs font-bold text-secondary bg-surface transition-colors">Обо мне</a>
+                        <div class="w-4 h-px bg-gray-500"></div>
+                        <a href="#experience" class="nav-link-mobile px-3 py-1 rounded-md border border-gray-600 text-xs font-bold text-secondary bg-surface transition-colors">Опыт</a>
+                        <div class="w-4 h-px bg-gray-500"></div>
+                        <a href="#skills" class="nav-link-mobile px-3 py-1 rounded-md border border-gray-600 text-xs font-bold text-secondary bg-surface transition-colors">Навыки</a>
+                        <div class="w-4 h-px bg-gray-500"></div>
+                        <a href="#education" class="nav-link-mobile px-3 py-1 rounded-md border border-gray-600 text-xs font-bold text-secondary bg-surface transition-colors">Образование</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 overflow-hidden relative">
+
+        <svg class="absolute top-0 left-0 w-full h-full pointer-events-none z-[-1] opacity-20 hidden md:block" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50%" y1="100" x2="50%" y2="3000" class="bpmn-path" />
+        </svg>
+
+        <!-- HERO -->
+        <section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 md:mb-32">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="relative group cursor-pointer w-full md:w-5/12 flex justify-center" onclick="openModal('myphoto.jpg')">
+                    <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border-2 border-accent p-1 relative animate-float bg-surface">
+                         <div class="w-full h-full rounded-full border border-dashed border-secondary p-2 overflow-hidden relative">
+                             <!-- Placeholder Image with initials if no photo -->
+                             <img src="myphoto.jpg" 
+                                  class="w-full h-full rounded-full object-cover transform transition-transform duration-700 group-hover:scale-110" 
+                                  alt="Адилет Тураров"
+                                  onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                             <!-- Fallback Icon -->
+                             <div class="hidden w-full h-full flex items-center justify-center bg-surface absolute inset-0 rounded-full">
+                                 <div class="text-6xl font-bold text-secondary">AT</div>
+                             </div>
+                         </div>
+                         <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-surface/90 backdrop-blur border border-gray-500 px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 whitespace-nowrap">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span class="text-xs font-mono font-bold text-text">Open to Offers</span>
+                         </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-7/12 text-center md:text-left">
+                    <h1 class="text-3xl md:text-6xl font-extrabold text-primary tracking-tight mb-2 reveal-text leading-tight">
+                        Адилет Тураров
+                    </h1>
+                    <p class="text-lg md:text-2xl text-accent font-mono mb-8 reveal-text flex flex-wrap justify-center md:justify-start gap-2" style="transition-delay: 100ms">
+                        <span>Reporting Developer</span> <span class="text-gray-500">|</span> 
+                        <span>BI Specialist</span> <span class="text-gray-500">|</span> 
+                        <span>Java & SQL</span>
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 reveal-text" style="transition-delay: 200ms">
+                        <div class="bpmn-task bg-surface p-5 hover:border-accent hover:shadow-lg transition-all relative group text-left">
+                            <div class="absolute -top-3 left-4 bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold border border-blue-200">
+                                <i class="fas fa-chart-line mr-1"></i> BI Решения
+                            </div>
+                            <p class="text-sm text-secondary mt-2 leading-relaxed">
+                                Разработка интерактивных дашбордов в Power BI и автоматизация SSRS.
+                            </p>
+                        </div>
+                        <div class="bpmn-task bg-surface p-5 hover:border-accent hover:shadow-lg transition-all relative group text-left">
+                             <div class="absolute -top-3 left-4 bg-purple-100 text-purple-800 px-2 py-0.5 rounded text-xs font-bold border border-purple-200">
+                                <i class="fas fa-database mr-1"></i> SQL Эксперт
+                            </div>
+                            <p class="text-sm text-secondary mt-2 leading-relaxed">
+                                Оптимизация запросов, ETL процессы, работа с Oracle, MSSQL, MySQL.
+                            </p>
+                        </div>
+                        <div class="bpmn-task bg-surface p-5 hover:border-accent hover:shadow-lg transition-all relative group text-left">
+                             <div class="absolute -top-3 left-4 bg-teal-100 text-teal-800 px-2 py-0.5 rounded text-xs font-bold border border-teal-200">
+                                <i class="fas fa-code mr-1"></i> Dev Stack
+                            </div>
+                            <p class="text-sm text-secondary mt-2 leading-relaxed">
+                                Java Spring Boot, Python, интеграция данных из разных источников.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE -->
+        <section id="experience" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
+            <div class="text-center mb-16 reveal-text">
+                <span class="text-accent font-mono text-xs tracking-[0.2em] uppercase border border-accent/20 px-3 py-1 rounded-full">Карьера</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mt-4">Профессиональный путь</h2>
+                <div class="w-px h-10 bg-gray-500 mx-auto mt-4"></div>
+                <div class="w-3 h-3 border-r border-b border-gray-500 rotate-45 mx-auto -mt-1.5"></div>
+            </div>
+
+            <div class="relative space-y-12" id="experience-container">
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-600 md:-translate-x-1/2 z-0"></div>
+                <!-- JS will inject jobs here -->
+            </div>
+
+            <!-- Show More button removed as there are few jobs, but kept structure for consistency if needed later -->
+            <div class="flex justify-center mt-12 relative z-10 hidden" id="show-more-wrapper">
+                 <button onclick="showMoreJobs()" id="show-more-btn" class="bg-surface border border-gray-600 text-primary px-8 py-3 rounded-full hover:bg-accent hover:text-white hover:border-accent transition-all shadow-lg flex items-center gap-2 group">
+                     <span id="show-more-text">Показать ещё</span> <i class="fas fa-chevron-down group-hover:translate-y-1 transition-transform"></i>
+                 </button>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
+             <div class="text-center mb-16 reveal-text">
+                <span class="text-accent font-mono text-xs tracking-[0.2em] uppercase border border-accent/20 px-3 py-1 rounded-full">Компетенции</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mt-4">Технический стек</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                 <div class="glass-card p-6 rounded-2xl flex flex-col items-center reveal-text hover:-translate-y-2 transition-transform">
+                    <div class="w-32 h-32 relative mb-4">
+                        <canvas id="chartSQL"></canvas>
+                        <div class="skill-percent">95%</div>
+                    </div>
+                    <h3 class="font-bold text-lg text-primary">SQL & DBs</h3>
+                 </div>
+                 <div class="glass-card p-6 rounded-2xl flex flex-col items-center reveal-text hover:-translate-y-2 transition-transform" style="transition-delay: 100ms">
+                    <div class="w-32 h-32 relative mb-4">
+                        <canvas id="chartBI"></canvas>
+                        <div class="skill-percent">90%</div>
+                    </div>
+                    <h3 class="font-bold text-lg text-primary">Power BI & SSRS</h3>
+                 </div>
+                 <div class="glass-card p-6 rounded-2xl flex flex-col items-center reveal-text hover:-translate-y-2 transition-transform" style="transition-delay: 200ms">
+                    <div class="w-32 h-32 relative mb-4">
+                        <canvas id="chartReports"></canvas>
+                        <div class="skill-percent">85%</div>
+                    </div>
+                    <h3 class="font-bold text-lg text-primary">Report Builders</h3>
+                 </div>
+                 <div class="glass-card p-6 rounded-2xl flex flex-col items-center reveal-text hover:-translate-y-2 transition-transform" style="transition-delay: 300ms">
+                    <div class="w-32 h-32 relative mb-4">
+                        <canvas id="chartCode"></canvas>
+                        <div class="skill-percent">70%</div>
+                    </div>
+                    <h3 class="font-bold text-lg text-primary">Java & Python</h3>
+                 </div>
+            </div>
+            <div class="bg-surface p-8 rounded-2xl border border-gray-600 shadow-sm relative overflow-hidden group">
+                <div class="absolute -right-10 -bottom-10 opacity-5 transform rotate-12 group-hover:rotate-45 transition-transform duration-700">
+                    <i class="fas fa-layer-group text-9xl text-accent"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-8 text-primary flex items-center gap-2 border-b border-gray-600 pb-4">
+                    <i class="fas fa-toolbox text-accent"></i> Детализация навыков
+                </h3>
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="text-sm font-bold text-muted uppercase tracking-wider mb-3">Базы Данных и SQL (Expert)</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">Oracle 11g</span>
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">PL/SQL</span>
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">MS SQL 2012/2018</span>
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">PostgreSQL 13/14</span>
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">MySQL</span>
+                            <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium border border-blue-800">Query Optimization</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-muted uppercase tracking-wider mb-3">BI и Отчетность</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">Power BI</span>
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">DAX</span>
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">SSRS</span>
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">Jaspersoft Studio</span>
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">Report Builder</span>
+                            <span class="px-3 py-1 bg-green-900/30 text-green-300 rounded-lg text-sm font-medium border border-green-800">ETL</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-muted uppercase tracking-wider mb-3">Программирование и Прочее</h4>
+                        <div class="flex flex-wrap gap-2">
+                             <span class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm font-medium border border-gray-600">Java Spring Boot</span>
+                             <span class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm font-medium border border-gray-600">Python</span>
+                             <span class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm font-medium border border-gray-600">Git</span>
+                             <span class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm font-medium border border-gray-600">Frontend (Basic)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION -->
+        <section id="education" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32 reveal-text">
+            <div class="text-center mb-16">
+                <span class="text-accent font-mono text-xs tracking-[0.2em] uppercase border border-accent/20 px-3 py-1 rounded-full">Знания</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mt-4">Образование и Курсы</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <h3 class="font-bold text-xl text-primary border-b border-gray-600 pb-2 mb-4"><i class="fas fa-graduation-cap text-accent mr-2"></i> Академическое</h3>
+                    <div class="bg-surface p-6 rounded-xl border-l-4 border-accent shadow-sm hover:translate-x-2 transition-transform duration-300">
+                        <div class="flex flex-col justify-start items-start">
+                             <h4 class="font-bold text-lg text-primary">КГТУ им. Раззакова</h4>
+                             <p class="text-secondary text-sm font-medium mt-1">Институт Электроники и Телекоммуникации</p>
+                             <p class="text-muted text-xs mt-1">Направление: Инфокоммуникационные технологии и системы связи</p>
+                             <div class="mt-2 flex items-center gap-2">
+                                 <span class="bg-gray-700 text-gray-200 text-xs font-bold px-2 py-1 rounded">2015 - 2019</span>
+                                 <span class="text-xs text-muted">Высшее</span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                     <h3 class="font-bold text-xl text-primary border-b border-gray-600 pb-2 mb-4"><i class="fas fa-certificate text-accent mr-2"></i> Курсы и Сертификаты</h3>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-surface p-4 rounded-xl border border-gray-600 shadow-sm hover:border-accent hover:shadow-md transition-all group">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fab fa-java text-2xl text-red-500 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-xs font-bold text-gray-400">2022</span>
+                            </div>
+                            <h4 class="font-bold text-primary">Java Spring Advanced</h4>
+                            <p class="text-xs text-secondary mt-1">Kumtor Gold Company</p>
+                        </div>
+                        <div class="bg-surface p-4 rounded-xl border border-gray-600 shadow-sm hover:border-accent hover:shadow-md transition-all group">
+                             <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-code text-2xl text-yellow-500 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-xs font-bold text-gray-400">2020</span>
+                            </div>
+                            <h4 class="font-bold text-primary">Frontend Разработчик</h4>
+                            <p class="text-xs text-secondary mt-1">Makers Coding Bootcamp</p>
+                        </div>
+                         <div class="bg-surface p-4 rounded-xl border border-gray-600 shadow-sm hover:border-accent hover:shadow-md transition-all group">
+                             <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-database text-2xl text-red-600 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-xs font-bold text-gray-400">2019</span>
+                            </div>
+                            <h4 class="font-bold text-primary">Oracle DB: SQL & PL/SQL</h4>
+                            <p class="text-xs text-secondary mt-1">Учебный центр EASY IT</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="bg-surface border-t border-gray-600 mt-20 py-12">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                 <div class="flex justify-center items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded border-2 border-primary rotate-45 flex items-center justify-center">
+                         <div class="w-4 h-4 bg-primary -rotate-45"></div>
+                    </div>
+                    <span class="font-bold text-xl text-primary tracking-tight font-mono">Adilet Turarov</span>
+                </div>
+                <div class="flex justify-center space-x-8 mb-8">
+                     <a href="https://github.com/AdiletTurarov" target="_blank" class="text-gray-400 hover:text-white text-2xl transition-transform hover:-translate-y-1"><i class="fab fa-github"></i></a>
+                     <a href="https://www.linkedin.com/in/adilet-turarov-253a351b0" target="_blank" class="text-gray-400 hover:text-blue-500 text-2xl transition-transform hover:-translate-y-1"><i class="fab fa-linkedin"></i></a>
+                     <a href="https://wa.me/996707877113" target="_blank" class="text-gray-400 hover:text-green-500 text-2xl transition-transform hover:-translate-y-1"><i class="fab fa-whatsapp"></i></a>
+                     <a href="mailto:adilet.turarov13@gmail.com" class="text-gray-400 hover:text-red-500 text-2xl transition-transform hover:-translate-y-1"><i class="fas fa-envelope"></i></a>
+                </div>
+                <p class="text-muted text-sm">© 2026. Bishkek, Kyrgyzstan.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- 1. CONFIG & DATA ---
+        const jobs = [
+            { 
+                role: 'Middle Reporting & BI Developer', 
+                company: 'Kumtor Gold Company', 
+                dates: 'Апрель 2022 — Наст. время', 
+                desc: 'Разработка интерактивных отчетов в Power BI, создание моделей данных (DAX). Настройка и администрирование SSRS. Оптимизация SQL-запросов, ETL-процессы, настройка Gateway. Взаимодействие с заказчиками.', 
+                img: 'kgc_logo_placeholder.png', 
+                icon: 'fa-chart-pie' 
+            },
+            { 
+                role: 'Разработчик отчетности', 
+                company: 'ОсОО "Интерсофт"', 
+                dates: 'Август 2020 — Апрель 2022', 
+                desc: 'Создание процедур MySQL для Нацстатком. Разработка отчетов в Jaspersoft Studio (PostgreSQL). Устранение дубликатов в MSSQL. Поддержка ПО на Java Spring Boot.', 
+                img: 'intersoft_placeholder.png', 
+                icon: 'fa-file-code' 
+            }
+        ];
+
+        // --- 2. THEME MANAGEMENT ---
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('theme', themeName);
+            updateThemeButtons(themeName);
+        }
+
+        function updateThemeButtons(activeTheme) {
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.themeVal === activeTheme) btn.classList.add('active');
+            });
+        }
+
+        function toggleThemeMobile() {
+            const current = localStorage.getItem('theme') || 'dark';
+            let nextTheme = 'light';
+            if (current === 'light') nextTheme = 'dark';
+            else if (current === 'dark') nextTheme = 'warm';
+            setTheme(nextTheme);
+        }
+
+        // --- 3. UI INTERACTIONS ---
+        function toggleContacts(source) {
+            const id = source === 'mobile' ? 'contact-icons-mobile' : 'contact-icons';
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('active');
+            }
+        }
+        
+        window.addEventListener('click', function(e) {
+            const btnDesk = document.querySelector('button[onclick="toggleContacts(\'desktop\')"]');
+            const dropDesk = document.getElementById('contact-icons');
+            if (btnDesk && dropDesk && !btnDesk.contains(e.target) && !dropDesk.contains(e.target)) {
+                dropDesk.classList.remove('active');
+            }
+            
+            const btnMob = document.querySelector('button[onclick="toggleContacts(\'mobile\')"]');
+            const dropMob = document.getElementById('contact-icons-mobile');
+            if (btnMob && dropMob && !btnMob.contains(e.target) && !dropMob.contains(e.target)) {
+                dropMob.classList.remove('active');
+            }
+        });
+
+        // --- 4. JOBS RENDERING ---
+        function renderJobs() {
+            const container = document.getElementById('experience-container');
+            if(!container) return; 
+
+            // Show all jobs by default as there are only 2
+            const jobsToShowInitial = 10;
+            
+            const html = jobs.map((job, index) => {
+                const isHidden = index >= jobsToShowInitial ? 'job-hidden' : '';
+                const alignLeft = index % 2 !== 0;
+
+                // Mobile Template
+                const mobileLayout = `
+                    <div class="md:hidden flex gap-4 pl-4 relative pb-8">
+                         <div class="absolute left-[29px] top-8 bottom-0 w-0.5 bg-gray-600"></div>
+                        <div class="flex-shrink-0 w-3 h-3 bg-accent rounded-full mt-6 -ml-[22px] border-4 border-surface shadow-sm z-20"></div>
+                        <div class="bg-surface p-5 rounded-xl border border-gray-600 shadow-sm w-full">
+                            <span class="text-xs font-bold text-accent uppercase mb-1 block">${job.dates}</span>
+                            <h3 class="font-bold text-lg text-primary">${job.role}</h3>
+                            <div class="text-sm font-semibold text-secondary mb-2">${job.company}</div>
+                            <p class="text-sm text-muted">${job.desc}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Desktop Template
+                const desktopLayout = `
+                    <div class="hidden md:flex items-center justify-between group w-full">
+                        <div class="w-5/12 ${!alignLeft ? 'text-right pr-8' : 'text-left pl-8 order-last'}">
+                            ${!alignLeft 
+                                ? `<div class="bg-surface p-5 rounded-xl border border-gray-600 shadow-sm hover:border-accent transition-all relative">
+                                     <div class="absolute top-1/2 right-[-9px] w-4 h-4 bg-surface border-t border-r border-gray-600 transform rotate-45"></div>
+                                     <h3 class="font-bold text-lg text-primary">${job.role}</h3>
+                                     <div class="text-sm font-semibold text-secondary mb-2">${job.company}</div>
+                                     <p class="text-sm text-muted leading-relaxed">${job.desc}</p>
+                                   </div>`
+                                : `<div class="py-2 px-4 rounded-lg border-2 border-dashed border-gray-600 inline-block bg-surface/50">
+                                     <i class="far fa-clock text-accent mr-2"></i> <span class="font-mono font-bold text-secondary text-sm">${job.dates}</span>
+                                   </div>`
+                            }
+                        </div>
+
+                        <div class="flex-shrink-0 w-14 h-14 rounded-full bg-surface border-4 border-gray-600 shadow-md flex items-center justify-center relative cursor-pointer hover:scale-110 transition-transform z-20" onclick="openModal('${job.img}')">
+                            <div class="w-full h-full rounded-full overflow-hidden relative bg-white flex items-center justify-center">
+                                <img src="${job.img}" class="w-full h-full object-cover hidden" alt="${job.company}" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                                <div class="absolute inset-0 flex items-center justify-center bg-white text-secondary">
+                                    <i class="fas ${job.icon} text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="absolute top-1/2 -left-4 w-4 h-0.5 bg-gray-600"></div>
+                            <div class="absolute top-1/2 -right-4 w-4 h-0.5 bg-gray-600"></div>
+                        </div>
+
+                        <div class="w-5/12 ${!alignLeft ? 'text-left pl-8' : 'text-right pr-8 order-first'}">
+                             ${alignLeft 
+                                ? `<div class="bg-surface p-5 rounded-xl border border-gray-600 shadow-sm hover:border-accent transition-all relative">
+                                     <div class="absolute top-1/2 left-[-9px] w-4 h-4 bg-surface border-l border-b border-gray-600 transform rotate-45"></div>
+                                     <h3 class="font-bold text-lg text-primary">${job.role}</h3>
+                                     <div class="text-sm font-semibold text-secondary mb-2">${job.company}</div>
+                                     <p class="text-sm text-muted leading-relaxed">${job.desc}</p>
+                                   </div>`
+                                : `<div class="py-2 px-4 rounded-lg border-2 border-dashed border-gray-600 inline-block bg-surface/50">
+                                     <i class="far fa-clock text-accent mr-2"></i> <span class="font-mono font-bold text-secondary text-sm">${job.dates}</span>
+                                   </div>`
+                            }
+                        </div>
+                    </div>
+                `;
+                
+                return `<div class="relative z-10 reveal-text visible ${isHidden}">${mobileLayout}${desktopLayout}</div>`;
+            }).join('');
+
+            const centerLine = container.innerHTML; 
+            container.innerHTML = centerLine + html; 
+        }
+
+        // --- 5. MODAL LOGIC ---
+        function openModal(src) {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('modal-img');
+            img.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- MAIN INITIALIZATION ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Init Theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            setTheme(savedTheme);
+
+            // 2. Render Jobs
+            renderJobs();
+
+            // 3. Observer Setup
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+
+            // 4. Scroll Spy
+            const sections = document.querySelectorAll('section');
+            const desktopLinks = document.querySelectorAll('.nav-link-desktop');
+            const mobileLinks = document.querySelectorAll('.nav-link-mobile');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                if (window.scrollY < 100) current = '#about'; 
+                else {
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        if (scrollY >= (sectionTop - 300)) current = '#' + section.getAttribute('id');
+                    });
+                }
+
+                desktopLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href') === current) link.classList.add('active-nav');
+                });
+                
+                mobileLinks.forEach(link => {
+                    link.classList.remove('active-mobile-nav');
+                    if (link.getAttribute('href') === current) link.classList.add('active-mobile-nav');
+                });
+            });
+
+            // 5. Charts
+            const createChart = (ctxId, color, value) => {
+                const canvas = document.getElementById(ctxId);
+                if(!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Skill', 'Rest'],
+                        datasets: [{
+                            data: [value, 100 - value],
+                            backgroundColor: [color, 'rgba(148, 163, 184, 0.1)'],
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: {
+                        cutout: '80%',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                        animation: { animateScale: true, animateRotate: true }
+                    }
+                });
+            };
+
+            const chartObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    // SQL & DBs
+                    createChart('chartSQL', '#3b82f6', 95); // Blue
+                    // Power BI & SSRS
+                    createChart('chartBI', '#f59e0b', 90); // Yellow/Orange
+                    // Report Builders
+                    createChart('chartReports', '#14b8a6', 85); // Teal
+                    // Java & Python
+                    createChart('chartCode', '#ef4444', 70); // Red
+                    chartObserver.disconnect();
+                }
+            }, { threshold: 0.1 });
+            
+            const skillsSection = document.getElementById('skills');
+            if(skillsSection) chartObserver.observe(skillsSection);
+        });
+    </script>
+</body>
+</html>
